@@ -1,18 +1,46 @@
 const vscode = require('vscode');
 const cm = require('./hcmobile-config-gl');
-
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const util = require('./util');
 
 module.exports = function (context) {
     // 注册HelloWord命令
-    context.subscriptions.push(vscode.commands.registerCommand('extension.hcmobile.runjs', (uri) => {
-        vscode.window.showInformationMessage('Hello World！你好，小茗同学！hcmobile');
-        vscode.window.showInformationMessage(`当前文件(夹)路径是：${uri ? uri.path : '空'}`);
+    context.subscriptions.push(vscode.commands.registerCommand('extension.hcmobile.runhtml', (uri) => {
+
         if (cm.ipconfig) {
+            try {
+                let text = fs.readFileSync(uri.fsPath, 'utf-8');
+                //  console.log(text);
+
+                const options = {
+                    hostname: 'http://baidu.com',
+                    port: 80,
+                    path: '/runJsCode',
+                    method: 'POST',
+                    body: text
+                };
+                // const req = http.request(options, (res) => {
+                //     console.log(`状态码: ${res.statusCode}`);
+                //     console.log(`响应头: ${JSON.stringify(res.headers)}`);
+                //     res.setEncoding('utf8');
+                //     res.on('data', (chunk) => {
+                //         console.log(`响应主体: ${chunk}`);
+                //     });
+                //     res.on('end', () => {
+                //         console.log('响应中已无数据。');
+                //     });
+                // });
+
+                // req.on('error', (e) => {
+                //     console.error(`请求遇到问题: ` + e);
+                // });
 
 
+            } catch (e) {
+                console.log(e);
+            }
         } else {
 
             // 工程目录一定要提前获取，因为创建了webview之后activeTextEditor会不准确
@@ -30,7 +58,20 @@ module.exports = function (context) {
             panel.webview.html = getWebViewContent(context, 'src/view/test-webview.html');
             panel.webview.onDidReceiveMessage(message => {
                 console.log(JSON.stringify(message) + "---powyin")
+
+                try {
+                    switch (message.cmd) {
+                        case "editIp":
+                            message.ip;
+                            vscode.window.showInformationMessage(message.ip);
+                            break;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             }, undefined, context.subscriptions);
+
+            cm.ipconfig = "true";
 
 
         }
@@ -38,13 +79,41 @@ module.exports = function (context) {
     }));
 
 
-    context.subscriptions.push(vscode.commands.registerCommand('extension.hcmobile.runjshtml', (uri) => {
-      
-        vscode.window.showInformationMessage('Hello World！你好，小茗同学！hcmobile');
-        vscode.window.showInformationMessage(`当前文件(夹)路径是：${uri ? uri.path : '空'}`);
+    context.subscriptions.push(vscode.commands.registerCommand('extension.hcmobile.runjs', (uri) => {
+        // vscode.window.showInformationMessage('Hello World！你好，小茗同学！hcmobile' + uri.fsPath);
+
         if (cm.ipconfig) {
+            try {
+                let text = fs.readFileSync(uri.fsPath, 'utf-8');
+                //  console.log(text);
+
+                const options = {
+                    hostname: 'http://baidu.com',
+                    port: 80,
+                    path: '/runJsCode',
+                    method: 'POST',
+                    body: text
+                };
+                // const req = http.request(options, (res) => {
+                //     console.log(`状态码: ${res.statusCode}`);
+                //     console.log(`响应头: ${JSON.stringify(res.headers)}`);
+                //     res.setEncoding('utf8');
+                //     res.on('data', (chunk) => {
+                //         console.log(`响应主体: ${chunk}`);
+                //     });
+                //     res.on('end', () => {
+                //         console.log('响应中已无数据。');
+                //     });
+                // });
+
+                // req.on('error', (e) => {
+                //     console.error(`请求遇到问题: ` + e);
+                // });
 
 
+            } catch (e) {
+                console.log(e);
+            }
         } else {
 
             // 工程目录一定要提前获取，因为创建了webview之后activeTextEditor会不准确
@@ -62,7 +131,20 @@ module.exports = function (context) {
             panel.webview.html = getWebViewContent(context, 'src/view/test-webview.html');
             panel.webview.onDidReceiveMessage(message => {
                 console.log(JSON.stringify(message) + "---powyin")
+
+                try {
+                    switch (message.cmd) {
+                        case "editIp":
+                            message.ip;
+                            vscode.window.showInformationMessage(message.ip);
+                            break;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
             }, undefined, context.subscriptions);
+
+            cm.ipconfig = "true";
 
 
         }
@@ -95,49 +177,4 @@ function getWebViewContent(context, templatePath) {
     return html;
 }
 
-/**
- * 执行回调函数
- * @param {*} panel 
- * @param {*} message 
- * @param {*} resp 
- */
-function invokeCallback(panel, message, resp) {
-    console.log('回调消息：', resp);
-    // 错误码在400-600之间的，默认弹出错误提示
-    if (typeof resp == 'object' && resp.code && resp.code >= 400 && resp.code < 600) {
-        util.showError(resp.message || '发生未知错误！');
-    }
-    panel.webview.postMessage({ cmd: 'vscodeCallback', cbid: message.cbid, data: resp });
-}
-
-/**
- * 存放所有消息回调函数，根据 message.cmd 来决定调用哪个方法
- */
-const messageHandler = {
-    // 弹出提示
-    alert(global, message) {
-        util.showInfo(message.info);
-    },
-    // 显示错误提示
-    error(global, message) {
-        util.showError(message.info);
-    },
-    // 获取工程名
-    getProjectName(global, message) {
-        invokeCallback(global.panel, message, util.getProjectName(global.projectPath));
-    },
-    openFileInFinder(global, message) {
-        util.openFileInFinder(`${global.projectPath}/${message.path}`);
-        // 这里的回调其实是假的，并没有真正判断是否成功
-        invokeCallback(global.panel, message, { code: 0, text: '成功' });
-    },
-    openFileInVscode(global, message) {
-        util.openFileInVscode(`${global.projectPath}/${message.path}`, message.text);
-        invokeCallback(global.panel, message, { code: 0, text: '成功' });
-    },
-    openUrlInBrowser(global, message) {
-        util.openUrlInBrowser(message.url);
-        invokeCallback(global.panel, message, { code: 0, text: '成功' });
-    }
-};
 
