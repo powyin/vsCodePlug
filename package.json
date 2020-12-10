@@ -23,6 +23,22 @@
     ],
     "main": "./src/extension",
     "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "TypeScript configuration",
+            "properties": {
+                "editIp_key": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Clid Grid Ip地址"
+                },
+                "vscodePluginDemo.showTip": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "启动时显示自定义欢迎页"
+                }
+            }
+        },
         "commands": [
             {
                 "command": "extension.sayHello",
@@ -70,12 +86,8 @@
                     "group": "navigation"
                 }
             ],
-            "editor/title": [
-
-            ],
-            "editor/title/context": [
-
-            ],
+            "editor/title": [],
+            "editor/title/context": [],
             "explorer/context": [
                 {
                     "when": "resourceLangId == html",

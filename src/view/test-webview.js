@@ -52,8 +52,11 @@ new Vue({
         error(info) {
             callVscode({ cmd: 'error', info: info }, null);
         },
-        openFileInFinder() {
-            callVscode({cmd: 'openFileInFinder', path: `package.json`}, () => {
+        clickToCOnfig() {
+            let ele = document.getElementsByClassName('container-userInput')[0]
+            let data = ele.value
+
+            callVscode({cmd: 'editIp', ip: data}, () => {
                 this.alert('打开成功！');
             });
         },

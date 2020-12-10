@@ -14,5 +14,6 @@ function provideHover(document, position, token) {
 }
 
 module.exports = {
-    ipconfig:""
+    ipconfig:"",
+    ipport:""
 };
