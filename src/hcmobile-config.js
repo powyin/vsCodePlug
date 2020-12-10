@@ -6,7 +6,7 @@ const path = require('path');
 const util = require('./util');
 // const axios = require('./axios.min')
 const querystring = require('querystring');
-const axios = require('axios');
+const axios = require('./lib/axios');
 
 
 
