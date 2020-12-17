@@ -21,13 +21,14 @@ function callVscode(data, cb) {
     vscode.postMessage(data);
 }
 
-window.addEventListener('message', event => {
-    const message = event.data;
+window.addEventListener('message', function(event) {
+    const message = event.data; // The JSON data our extension sent
     switch (message.cmd) {
-        case 'vscodeCallback':
-            console.log(message.data);
-            (callbacks[message.cbid] || function () { })(message.data);
-            delete callbacks[message.cbid];
+        case 'getIp':
+            let ip = document.getElementById('ipAddress')
+            ip.value = message.data.ipMobile;
+            let home = document.getElementById('homeAddress')
+            home.value = message.data.ipPc;
             break;
         default: break;
     }
@@ -39,7 +40,7 @@ new Vue({
         projectName: '加载中',
     },
     mounted() {
-        callVscode('getProjectName', projectName => this.projectName = projectName);
+        callVscode('getIp', null);
     },
     watch: {
     },
@@ -53,11 +54,18 @@ new Vue({
             callVscode({ cmd: 'error', info: info }, null);
         },
         clickToCOnfig() {
-            let ele = document.getElementsByClassName('container-userInput')[0]
-            let data = ele.value
-
-            callVscode({cmd: 'editIp', ip: data}, () => {
-                this.alert('打开成功！');
+            let ip = document.getElementById('ipAddress')
+            let idAddress = ip.value
+            let home = document.getElementById('homeAddress')
+            let homeAddress = home.value
+            let data = {
+                cmd:"editIp",
+                ipMobile: idAddress,
+                ipPc: homeAddress
+            }
+            console.log('打开成功！');
+            callVscode(data, () => {
+                
             });
         },
         openFileInVscode() {

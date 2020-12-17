@@ -6,7 +6,7 @@ const path = require('path');
 const util = require('./util');
 // const axios = require('./axios.min')
 const querystring = require('querystring');
-const axios = require('./lib/axios');
+const axios = require('./lib/lib/axios');
 
 
 
@@ -64,14 +64,19 @@ function createWebview(context, callBack) {
 
     panel.webview.html = getWebViewContent(context, 'src/view/test-webview.html');
     panel.webview.onDidReceiveMessage(message => {
+        console.log(JSON.stringify(message));
         try {
             switch (message.cmd) {
+                case "getIp":
+                    let ipM = vscode.workspace.getConfiguration().get("editIp_key");
+                    let ipP = vscode.workspace.getConfiguration().get("editPc_key");
+                    // {ipMobile:ipM , ipPc:ipP}
+                    panel.webview.postMessage({cmd: 'getIp', data: {cmd: 'getIp', ipMobile: ipM, ipPc: ipP}});
+                break
                 case "editIp":
                     message.ip;
-                   
-                    // cm.ipconfig = message.ip;
-                    vscode.workspace.getConfiguration().inspect("editIp_key");   
-                    vscode.workspace.getConfiguration().update("editIp_key", message.ip);
+                    vscode.workspace.getConfiguration().update("editIp_key", message.ipMobile);
+                    vscode.workspace.getConfiguration().update("editPc_key", message.ipPc);
                     let ipconf = vscode.workspace.getConfiguration().get("editIp_key");
                     vscode.window.showInformationMessage(ipconf);
                     if (callBack) {
@@ -89,7 +94,7 @@ function createWebview(context, callBack) {
 
 function doPostMet(context, path, key) {
     let ipconf = vscode.workspace.getConfiguration().get("editIp_key");
-    console.log(ipconf);
+    // console.log(ipconf);
     if (!ipconf.startsWith("http://")) {
         ipconf = "http://" + ipconf;
     }
@@ -107,8 +112,8 @@ function doPostMet(context, path, key) {
                 vscode.window.showInformationMessage('运行成功');
             })
             .catch(error => {
-                console.log(error);
-                vscode.window.showInformationMessage('ip不可达，可能需要重新配置ip地址' + ipconf);
+                // console.log(error);
+                vscode.window.showInformationMessage('ip:'+ipconf+'不可用，请检查网络');
                 createWebview(context);
             });
     } catch (e) {

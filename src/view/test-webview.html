@@ -6,7 +6,7 @@
     <title>HSF可视化配置，这个标题其实是没用的</title>
     <link rel="stylesheet" href="../../lib/bootstrap-3.3.1/css/bootstrap.min.css">
     <style>
-        html, body, #app {
+        html, body{
             height: 100%;
         }
         ::-webkit-scrollbar {
@@ -84,107 +84,130 @@
         }
 
         /* 界面 */
+        *{
+            margin: 0;
+            padding: 0;
+        }
         .container-fluid{
             text-align: center;
+            background-color: black;
+            min-width: 1000px;
+            overflow: hidden;
+        }
+        .title{
+            color: #FFFFFF;
+            font-size: 48px;
+            margin-top: 50px;
+        }
+        .title2{
+            color: #F30A0A;
+            font-size: 24px;
+            margin-top: 20px;
         }
 
-        /* 上面的标题 */
-        .container-title{
-            color: #fff;
-            font-size: 36px;
-            font-weight: bold;
-            padding-top: 100px;
-            letter-spacing: 9px;
-        }
-
-        .container-IP{
-            display: flex;
-            align-items: center;
+        .ip{
             width: 850px;
             /* background-color: #2899c8; */
             background: -webkit-linear-gradient(left, #2899c8, #2899c8, #0e639c, #0e639c);
             background: -o-linear-gradient(left,#2899c8, #2899c8, #0e639c, #0e639c);
             background: -moz-linear-gradient(left,#2899c8, #2899c8, #0e639c, #0e639c);
             background: -ms-linear-gradient(left,#2899c8, #2899c8, #0e639c, #0e639c);
-            height: 85px;
             margin: auto;
-            margin-top: 100px;
-            padding: 17.5px 30px;
+            margin-top: 50px;
+            padding: 35px 30px;
             justify-content: space-between;
             border-radius: 10px;
             box-sizing: border-box;
         }
-        .container-text{
-            font-size: 22px;
-            color: #fff;
+        .content{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 30px;
         }
-        .container-userInput{
-            height: 100%;
-            flex: 1;
-            font-size: 22px;
-            color: black;
-            border-radius: 6px;
-        }
-        .container-btn{
-            margin-left: 20px;
-            height: 100%;
-            color: #fff;
-            font-size: 22px;
-            padding: 0 20px;
-            border: 1px solid black;
-            box-sizing: border-box;
-            border-radius: 6px;
-            background-color:  #0e639c;
-        }
-        .container-qr{
-            display: block;
-            margin: auto;
+        .left{
             width: 220px;
-            margin-top: 120px;
-        }
-        .container-qrText{
-            color: #fff;
+            color: #FFFFFF;
             font-size: 24px;
-            margin-top: 10px;
+            text-align: right;
         }
-        .container-bottom{
+        .right{
+            flex: 1;
+            padding-right: 60px;
+        }
+        .userInput{
+            width: 100%;
+            font-size: 24px;
+            border-radius: 4px;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
+            height: 50px;
+            color: black;
+        }
+        .submit{
+            width: 150px;
+            height: 50px;
+            color: #FFFFFF;
+            font-size: 24px;
+            background: linear-gradient(180deg, #2899C8, #0E639C);
+            border: 2px solid #155C8A;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .bottom{
             font-size: 17px;
             color: #fff;
-            margin-top: 100px;
+            margin-top: 47px;
+            margin-bottom: 14px;
+        }
+        .cloudGrid{
+            display: flex;
+            width: 650px;
+            margin: 46px auto 0 auto;
+            justify-content: space-between;
+        }
+        .cloudGridRight{
+            padding-top: 23px;
+        }
+        .qrText{
+            font-size: 24px;
+            color: #fff;
+            width: 200px;
+            margin: 23px auto 0 auto;
         }
     </style>
 </head>
 
 <body>
     <div id="app" class="container-fluid">
-        <div class="container-title">欢迎使用CloudGrid开发跨平台应用</div>
-        <div class="container-IP">
-            <div class="container-text">请输入CloudGrid本地IP地址：</div>
-            <input class="container-userInput">
-            <button class="container-btn" @click="clickToCOnfig">确认</button>
+        <div class="title">欢迎使用CloudGrid开发夸平台应用</div>
+        <div class="title2">（需要与运行CloudGrid的手机处于同一个局域网内）</div>
+        <div class="ip">
+            <div class="content">
+                <div class="left">手机IP地址：</div>
+                <div class="right">
+                    <input class="userInput" id="ipAddress" maxlength="30">
+                </div>
+            </div>
+            <div class="content">
+                <div class="left">PC端主页地址：</div>
+                <div class="right">
+                    <input class="userInput" id="homeAddress" maxlength="255">
+                </div>
+            </div>
+            <button class="submit" @click="clickToCOnfig">确认</button>
         </div>
-        <img class="container-qr" src="./CloudGrid.png">
-        <div class="container-qrText">CloudGrid下载地址</div>
-        <div class="container-bottom">版权所有 www.yd-mobile.cn</div>
-        <!-- <h3 class="page-title">Webview演示</h3>
-        <p class="alert alert-warning" style="width: 65%">说明：VSCode中的WebView和普通网页几乎没有任何差别，唯一差别在于它多了一个acquireVsCodeApi方法，利用这个方法可以和插件本身进行消息通信，所以插件能实现什么功能，Webview也可以实现什么功能。</p>
-        <p class="alert alert-success" style="width: 65%">所以我们这里只需要简单演示一下消息通信，基于此能实现什么样的强大功能大家自己发挥。</p>
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">当前工程名</label>
-                <div class="col-sm-10">
-                    <p class="form-control-static">{{projectName}}</p>
+        <div class="cloudGrid">
+            <div class="cloudGridLeft">
+                <img src="./cloudGrid.png">
+            </div>
+            <div class="cloudGridRight">
+                <img src="./qr.png">
+                <div class="qrText">
+                    Android & iOS 扫码下载APP
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">简单功能演示</label>
-                <div class="col-sm-6">
-                    <a href="javascript:;" class="btn btn-sm btn-primary" @click="openFileInFinder">在Finder中打开文件</a>
-                    <a href="javascript:;" class="btn btn-sm btn-danger" @click="openFileInVscode">在VSCode中打开文件</a>
-                    <a href="javascript:;" class="btn btn-sm btn-success" @click="openUrlInBrowser">浏览器打开前端艺术家</a>
-                </div>
-            </div>
-        </form> -->
+        </div>
+        <div class="bottom">版权所有 www.yd-mobile.cn</div>
     </div>
     <script src="../../lib/jquery/jquery.min.js"></script>
     <script src="../../lib/bootstrap-3.3.1/js/bootstrap.min.js"></script>

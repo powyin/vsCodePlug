@@ -32,6 +32,11 @@
                     "default": "",
                     "description": "Clid Grid Ip地址"
                 },
+                "editPc_key": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Pc ip地址"
+                },
                 "vscodePluginDemo.showTip": {
                     "type": "boolean",
                     "default": true,
