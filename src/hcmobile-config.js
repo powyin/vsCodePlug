@@ -71,7 +71,7 @@ function createWebview(context, callBack) {
                     let ipM = vscode.workspace.getConfiguration().get("editIp_key");
                     let ipP = vscode.workspace.getConfiguration().get("editPc_key");
                     // {ipMobile:ipM , ipPc:ipP}
-                    panel.webview.postMessage({cmd: 'getIp', data: {cmd: 'getIp', ipMobile: ipM, ipPc: ipP}});
+                    panel.webview.postMessage({cmd: 'getIp', data: {cmd: 'getIp', ipMobile: ipM, ipPc: ipP, isErrorIpMobile:true}});
                 break
                 case "editIp":
                     message.ip;
